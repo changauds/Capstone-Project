@@ -1,0 +1,50 @@
+{
+    "2024-04-10": {
+        "brush_count": 1,
+        "brush_time_minutes": [
+            1
+        ],
+        "historic_brush_time_minutes": 2.5,
+        "historic_brush_count": 2.4
+    },
+    "2024-04-11": {
+        "brush_count": 2,
+        "brush_time_minutes": [
+            4,
+            5
+        ],
+        "historic_brush_time_minutes": 2.5,
+        "historic_brush_count": 2.4
+    },
+    "2024-04-12": {
+        "brush_count": 3,
+        "brush_time_minutes": [
+            2,
+            3,
+            2
+        ],
+        "historic_brush_time_minutes": 2.5,
+        "historic_brush_count": 2.3
+    },
+    "2024-04-13": {
+        "brush_count": 6,
+        "brush_time_minutes": [
+            123,
+            123,
+            123,
+            12,
+            12,
+            4
+        ],
+        "historic_brush_time_minutes": 17.291666666666668,
+        "historic_brush_count": 3.0
+    },
+    "2024-04-15": {
+        "brush_count": 1,
+        "brush_time_minutes": [
+            5
+        ],
+        "historic_brush_time_minutes": 83.8,
+        "historic_brush_count": 2.6
+    }
+}
