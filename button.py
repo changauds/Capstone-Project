@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 from signal import pause
-import json
+import os
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_UP)
@@ -18,12 +18,10 @@ def setTimer(t):
 t = 120
 
 def displayData():
-    # read from data.json
-    tooth_j_file = open('data.json', "r")
-    data = json.load(tooth_j_file.read())
-    for i in data['emp_details']:
-        print(i)
-    f.close()
+    # Change this to the ABSOLUTE path of toothbrush.py on the rpi
+    os.system("python toothbrush.py --show")
+
+
 try:
     while True:
         if (GPIO.input(23)):
