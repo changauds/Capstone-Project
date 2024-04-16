@@ -27,24 +27,32 @@
         "historic_brush_count": 2.3
     },
     "2024-04-13": {
-        "brush_count": 6,
+        "brush_count": 3,
         "brush_time_minutes": [
             123,
-            123,
-            123,
-            12,
             12,
             4
         ],
         "historic_brush_time_minutes": 17.291666666666668,
         "historic_brush_count": 3.0
     },
+    "2024-04-14": {
+        "brush_count": 4,
+        "brush_time_minutes": [
+            5,
+            2,
+            2,
+            2
+        ],
+        "historic_brush_time_minutes": 21.25,
+        "historic_brush_count": 3.2
+    },
     "2024-04-15": {
         "brush_count": 1,
         "brush_time_minutes": [
-            5
+            2
         ],
-        "historic_brush_time_minutes": 83.8,
-        "historic_brush_count": 2.6
+        "historic_brush_time_minutes": 9.819444444444445,
+        "historic_brush_count": 2.3333333333333335
     }
 }
