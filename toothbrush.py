@@ -9,12 +9,12 @@ today: str = (str)(datetime.now().date())
 cliArgs: list[int] = sys.argv[1:]
 
 
-def storeTime(time: int) -> None:
+def storeTime(time) -> None:
     """ Store user-input time into daily statistics, then recalculate the
     historic averages for brushing data.
 
     Args:
-        time (int): duration of brush session
+        time: duration of brush session
     """
 
     # Read the data file
@@ -29,7 +29,7 @@ def storeTime(time: int) -> None:
     if today in brushData.keys():
         print(f"Updating entry for date: {today}")
         brushData[today]['brush_count'] += 1
-        brushData[today]['brush_time_minutes'].append(time)
+        brushData[today]['brush_time_minutes'].append((float)(time))
     else:
         print(f"Creating new entry for date: {today}")
         brushData[today] = {
@@ -72,7 +72,7 @@ def showData() -> None:
     # Check for existing daily data
     if today in brushData.keys():
         count: int = brushData[today]['brush_count']
-        timeSum: int = 0
+        timeSum: float = 0
         for time in brushData[today]['brush_time_minutes']:
             timeSum += time;
         histCnt: int = brushData[today]['historic_brush_count']
@@ -93,7 +93,7 @@ def main():
         print("*** No command specified, run -h for information ***")
         return
     elif cliArgs[0] == "--store" and len(cliArgs) > 1:
-        storeTime((int)(cliArgs[1]))
+        storeTime((float)(cliArgs[1]))
     elif cliArgs[0] == "--show":
         showData()
     elif cliArgs[0] == "-h":

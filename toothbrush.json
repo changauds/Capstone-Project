@@ -54,5 +54,16 @@
         ],
         "historic_brush_time_minutes": 9.819444444444445,
         "historic_brush_count": 2.3333333333333335
+    },
+    "2024-04-16": {
+        "brush_count": 4,
+        "brush_time_minutes": [
+            4,
+            4.4,
+            4.0,
+            4.2134
+        ],
+        "historic_brush_time_minutes": 9.010002380952383,
+        "historic_brush_count": 2.5714285714285716
     }
 }
