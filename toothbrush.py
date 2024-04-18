@@ -89,9 +89,11 @@ def showData() -> None:
         print(f"\nBrushing Stats for {today}\n")
         print(f"You brushed {count} time(s) today, for a total of {timeSum_format} minutes!")
         print("\nHere's your daily breakdown:")
-        for i in range(len(brushData[today]['brush_time_minutes'])):
-            
-            print(f"\tBrush {i+1}: {brushData[today]['brush_time_minutes'][i]} minutes")
+        for i in range(len(brushData[today]['brush_time_minutes'])): 
+            timeSum_sec = (int)(brushData[today]['brush_time_minutes'][i] * 60)
+            timeSum_min, timeSum_sec = divmod(timeSum_sec, 60)
+            timeSum_format = '{:02d}:{:02d}'.format(timeSum_min, timeSum_sec)
+            print(f"\tBrush {i+1} -> {timeSum_format} minutes")
         print(f"\nOn average, you brush {histCnt} times a day for {histTime_format} minutes per brush\n")
     else:
         print(f"\nNo brush data for {today}\n")
