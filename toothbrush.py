@@ -19,7 +19,7 @@ def storeTime(time) -> None:
 
     # Read the data file
     print("Loading existing data...", end="")
-    brushData: dict = json.load(open("toothbrush.json", "r"))
+    brushData: dict = json.load(open("/home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.json", "r"))
     if not brushData:
         print("Failed to load data!")
         return
@@ -54,7 +54,7 @@ def storeTime(time) -> None:
 
     # Write changes back to the data file
     print("Writing changes...", end="")
-    json.dump(brushData, open("toothbrush.json", "w"), indent=4)
+    json.dump(brushData, open("/home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.json", "w"), indent=4)
     print("Success!")
 
 
@@ -65,7 +65,7 @@ def showData() -> None:
     TODO: Check for previous data if daily info unavailable
     """
     # Read the data file
-    brushData: dict = json.load(open("toothbrush.json", "r"))
+    brushData: dict = json.load(open("/home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.json", "r"))
     if not brushData:
         print("Failed to load data!")
         return
@@ -75,14 +75,24 @@ def showData() -> None:
         timeSum: float = 0
         for time in brushData[today]['brush_time_minutes']:
             timeSum += time;
+           
+        timeSum_sec = (int)(timeSum*60)
+        timeSum_min, timeSum_sec = divmod(timeSum_sec, 60)
+        timeSum_format = '{:02d}:{:02d}'.format(timeSum_min, timeSum_sec)
+
         histCnt: int = brushData[today]['historic_brush_count']
         histTime: int = brushData[today]['historic_brush_time_minutes']
+        
+        histTime_sec = (int)(histTime*60)
+        histTime_min, histTime_sec = divmod(histTime_sec, 60)
+        histTime_format = '{:02d}:{:02d}'.format(histTime_min, histTime_sec)
         print(f"\nBrushing Stats for {today}\n")
-        print(f"You brushed {count} time(s) today, for a total of {timeSum} minutes!")
+        print(f"You brushed {count} time(s) today, for a total of {timeSum_format} minutes!")
         print("\nHere's your daily breakdown:")
         for i in range(len(brushData[today]['brush_time_minutes'])):
+            
             print(f"\tBrush {i+1}: {brushData[today]['brush_time_minutes'][i]} minutes")
-        print(f"\nOn average, you brush {histCnt} times a day for {histTime} minutes per brush\n")
+        print(f"\nOn average, you brush {histCnt} times a day for {histTime_format} minutes per brush\n")
     else:
         print(f"\nNo brush data for {today}\n")
 
