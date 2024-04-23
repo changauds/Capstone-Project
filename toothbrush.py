@@ -19,7 +19,7 @@ def storeTime(time) -> None:
 
     # Read the data file
     print("Loading existing data...", end="")
-    brushData: dict = json.load(open("/home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.json", "r"))
+    brushData: dict = json.load(open("toothbrush_daily.json", "r"))
     if not brushData:
         print("Failed to load data!")
         return
@@ -34,9 +34,7 @@ def storeTime(time) -> None:
         print(f"Creating new entry for date: {today}")
         brushData[today] = {
             'brush_count': 1,
-            'brush_time_minutes': [time],
-            'historic_brush_time_minutes': 0,
-            'historic_brush_count': 0
+            'brush_time_minutes': [time]
         }
 
     # Calculate new historic values
@@ -49,24 +47,28 @@ def storeTime(time) -> None:
             time_historic += brushTime/brushData[day]['brush_count']
 
     # Write historic values to our data
-    brushData[today]['historic_brush_time_minutes'] = time_historic/total_days
-    brushData[today]['historic_brush_count'] = count_historic/total_days
+    averageBrushData: dict = json.load(open("toothbrush_average.json", "r"))
+    if not averageBrushData:
+        print("Failed to load average data!")
+        return
+    averageBrushData['historic_brush_time_minutes'] = time_historic/total_days
+    averageBrushData['historic_brush_count'] = count_historic/total_days
 
     # Write changes back to the data file
     print("Writing changes...", end="")
-    json.dump(brushData, open("/home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.json", "w"), indent=4)
+    json.dump(brushData, open("toothbrush_daily.json", "w"), indent=4)
+    json.dump(averageBrushData, open("toothbrush_average.json", "w"), indent=4)
     print("Success!")
 
 
 def showData() -> None:
     """ Print formatted statistics for the daily brush data.
     If no data is found, alert the user.
-
-    TODO: Check for previous data if daily info unavailable
     """
     # Read the data file
-    brushData: dict = json.load(open("/home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.json", "r"))
-    if not brushData:
+    brushData: dict = json.load(open("toothbrush_daily.json", "r"))
+    averageBrushData: dict = json.load(open("toothbrush_average.json", "r"))
+    if not brushData or not averageBrushData:
         print("Failed to load data!")
         return
     # Check for existing daily data
@@ -80,8 +82,8 @@ def showData() -> None:
         timeSum_min, timeSum_sec = divmod(timeSum_sec, 60)
         timeSum_format = '{:02d}:{:02d}'.format(timeSum_min, timeSum_sec)
 
-        histCnt: int = brushData[today]['historic_brush_count']
-        histTime: int = brushData[today]['historic_brush_time_minutes']
+        histCnt: int = averageBrushData['historic_brush_count']
+        histTime: int = averageBrushData['historic_brush_time_minutes']
         
         histTime_sec = (int)(histTime*60)
         histTime_min, histTime_sec = divmod(histTime_sec, 60)
@@ -93,7 +95,7 @@ def showData() -> None:
             timeSum_sec = (int)(brushData[today]['brush_time_minutes'][i] * 60)
             timeSum_min, timeSum_sec = divmod(timeSum_sec, 60)
             timeSum_format = '{:02d}:{:02d}'.format(timeSum_min, timeSum_sec)
-            print(f"\tBrush {i+1} -> {timeSum_format} minutes")
+            print(f"\tBrush {i+1} -> {timeSum_format}")
         print(f"\nOn average, you brush {histCnt} times a day for {histTime_format} minutes per brush\n")
     else:
         print(f"\nNo brush data for {today}\n")

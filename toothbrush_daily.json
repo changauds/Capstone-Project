@@ -3,18 +3,14 @@
         "brush_count": 1,
         "brush_time_minutes": [
             1
-        ],
-        "historic_brush_time_minutes": 2.5,
-        "historic_brush_count": 2.4
+        ]
     },
     "2024-04-11": {
         "brush_count": 2,
         "brush_time_minutes": [
             4,
             5
-        ],
-        "historic_brush_time_minutes": 2.5,
-        "historic_brush_count": 2.4
+        ]
     },
     "2024-04-12": {
         "brush_count": 3,
@@ -22,9 +18,7 @@
             2,
             3,
             2
-        ],
-        "historic_brush_time_minutes": 2.5,
-        "historic_brush_count": 2.3
+        ]
     },
     "2024-04-13": {
         "brush_count": 3,
@@ -32,9 +26,7 @@
             123,
             12,
             4
-        ],
-        "historic_brush_time_minutes": 17.291666666666668,
-        "historic_brush_count": 3.0
+        ]
     },
     "2024-04-14": {
         "brush_count": 4,
@@ -43,17 +35,13 @@
             2,
             2,
             2
-        ],
-        "historic_brush_time_minutes": 21.25,
-        "historic_brush_count": 3.2
+        ]
     },
     "2024-04-15": {
         "brush_count": 1,
         "brush_time_minutes": [
             2
-        ],
-        "historic_brush_time_minutes": 9.819444444444445,
-        "historic_brush_count": 2.3333333333333335
+        ]
     },
     "2024-04-16": {
         "brush_count": 4,
@@ -62,8 +50,15 @@
             4.4,
             4.0,
             4.2134
-        ],
-        "historic_brush_time_minutes": 9.010002380952383,
-        "historic_brush_count": 2.5714285714285716
+        ]
+    },
+    "2024-04-22": {
+        "brush_count": 4,
+        "brush_time_minutes": [
+            0.22,
+            55.0,
+            0.5,
+            0.5
+        ]
     }
 }
