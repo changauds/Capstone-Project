@@ -1,81 +1,35 @@
-import RPi.GPIO as GPIO
 import time
-from signal import pause
 import json
 import os
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+# Pull button state data from JSON file
+buttonData: dict = json.load(open("button_state.json", "r"))
+if not buttonData:
+    print("Failed to Load Data!")
+activeBrushing: str = buttonData["active_brushing"]
+start_time: float = (float)(buttonData["start_time"])
 
-activeBrushing = False
-'''
-def setTimer(duration):
-    stopwatch = 0
-    while True:
-        if duration >= 0:
-            mins_timer, secs_timer = divmod(duration, 60)
-            timer_display = '{:02d}:{:02d}'.format(mins_timer, secs_timer)
+# Toggle the toothbrush
+#os.system("echo 'a' > /dev/rfcomm1")
+time.sleep(0.1)
 
-            mins_stopwatch, secs_stopwatch = divmod(stopwatch, 60)
-            stopwatch_display = '{:02d}:{:02d}'.format(mins_stopwatch, secs_stopwatch)
+# Update based on state data
+if activeBrushing == "True":
+    print("Turning off the toothbrush")
+    # Get the elapsed time
+    brushtime = (time.time() - start_time) / 60
+    stopwatch_data = ("python toothbrush.py --store ")+(str)(brushtime)
+    print("STORING: ", stopwatch_data)
+    os.system(stopwatch_data)
+    # Take a moment for the toothbrush data to update, then display it to the user
+    time.sleep(0.2)
+    os.system("python toothbrush.py --show")
+    # Set brushing to inactive
+    buttonData["active_brushing"] = "False"
+else:
+    print("Starting the toothbrush timer")
+    buttonData["start_time"] = time.time()
+    buttonData["active_brushing"] = "True"
 
-            print("TIMER: ", timer_display, end="\r")
-            print("STOPWATCH: ", stopwatch_display, end="\r")
-            time.sleep(1)
-            
-            duration -= 1
-            stopwatch += 1
-            return stopwatch_display
-    print('Good job brushing!')
-'''
-def displayData():
-        os.system("python /home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.py --show")
-try:
-    while True:
-        if (GPIO.input(23)):
-                os.system("echo 'a' > /dev/rfcomm1")
-                time.sleep(0.1)
-                if activeBrushing == True:
-                    # Stop the timer, get timer value
-                    brushtime = time.time() - start_time 
-                    brushtime/= 60
-                    # Convert value to minutes (as a float)
-                    # call toothbrush --store [time]
-                    #displayData(stopwatch_display)
-                    #print(stopwatch_display)
-                    stopwatch_data = ("python /home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.py --store ")+(str)(brushtime)
-                    print("STORING: ", stopwatch_data)
-                    os.system(stopwatch_data)
-                    # set activeBrushing to false
-                    # delay
-                    time.sleep(0.2)
-                    # run toothbrush --show
-                    #print ('\033[2J')
-                    os.system("python /home/group6/MagicMirror/modules/MMM-PythonPrint/toothbrush.py --show")
-                    activeBrushing = False
-                elif activeBrushing == False:
-                    start_time = time.time()
-                    activeBrushing = True
-                    time.sleep(1)
-                    #setTimer(120)
-                    # switch activeBrushing to True
-                    # start timer
-                else:
-                    print("Error")
-                
-        '''
-        if (GPIO.input(23) and not False):
-            setTimer(120)
-            if (GPIO.input(23)):
-                state_on = False
-        
-            #displayData()
-            #if GPIO 23 is pressed again
-                #write to json file: toothbrush.json the stopwatch time at the point of the second button press
-        #if (GPIO.input(25)):
-            #displayData()
-        '''    
-except KeyboardInterrupt:
-    pass
-    
-GPIO.cleanup()
+# Write button state changes back to JSON
+json.dump(buttonData, open("button_state.json", "w"), indent=4)
