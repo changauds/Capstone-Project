@@ -1,6 +1,7 @@
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
+import filepath
 
 # The current date
 today: str = (str)(datetime.now().date())
@@ -9,9 +10,72 @@ today: str = (str)(datetime.now().date())
 cliArgs: list[int] = sys.argv[1:]
 
 
+def getStartOfWeek (date: str) -> str:
+    """ Finds the first day in the week containing the user-input date.
+
+    Args:
+        date (str): string representation of the current date
+
+    Returns:
+        start_week (str): Monday of the week containing the input date
+    """
+    # Convert input to a datetime object
+    given_date = datetime.strptime(date, '%Y-%m-%d')
+
+    # Find and return first day of week containing the input date
+    start_week =  given_date - timedelta(days=given_date.weekday())
+    return (str)(start_week.date())
+
+
+def calculateWeeklyData () -> None:
+    """ Groups daily brush data into weeks and calculates weekly averages.
+    Results are written to toothbrush_weekly.json
+    """
+    # Pull daily brush statistics
+    daily_brush_data: dict = json.load(open(f"{filepath.path}toothbrush_daily.json"))
+    if not daily_brush_data:
+        print("Failed to load data!")
+        return
+
+    # This will store the average weekly data
+    ave_week: dict = {}
+
+    """ Calculate average for every week
+        - iterate through each day's brush data
+        - calculate the average brush time for the day
+        - finds the start of the week for that day and update weekly brush data in the ave_week
+    """
+    for day in daily_brush_data.keys():
+        info_date = daily_brush_data[day]
+        brush_time = info_date['brush_time_minutes']
+        brush_count = info_date['brush_count']
+        average_brush_time = (sum(brush_time) / len(brush_time))
+
+        # map all days in a week to the first weekday
+        firstWeekday: str = getStartOfWeek(day)
+
+        # update the data if is not in the start week in the ave_week dictionary
+        if firstWeekday in ave_week.keys():
+            ave_week[firstWeekday]['days_brushed'] += 1
+            ave_week[firstWeekday]['average_brush_count'] += brush_count
+            ave_week[firstWeekday]['average_brush_time'] += average_brush_time
+        else:
+            ave_week[firstWeekday]: dict[str, int] = {}
+            ave_week[firstWeekday]['days_brushed'] = 1
+            ave_week[firstWeekday]['average_brush_count'] = brush_count
+            ave_week[firstWeekday]['average_brush_time'] = average_brush_time
+
+    # divide brush time/count by days brushed in a week
+    for week in ave_week.keys():
+        ave_week[week]['average_brush_count'] /= ave_week[week]['days_brushed']
+        ave_week[week]['average_brush_time']  /= ave_week[week]['days_brushed']
+
+    json.dump(ave_week, open(f"{filepath.path}toothbrush_weekly.json", "w"), indent=4)
+
+
 def storeTime(time) -> None:
     """ Store user-input time into daily statistics, then recalculate the
-    historic averages for brushing data.
+    weekly and global historic averages.
 
     Args:
         time: duration of brush session
@@ -19,7 +83,7 @@ def storeTime(time) -> None:
 
     # Read the data file
     print("Loading existing data...", end="")
-    brushData: dict = json.load(open("toothbrush_daily.json", "r"))
+    brushData: dict = json.load(open(f"{filepath.path}toothbrush_daily.json", "r"))
     if not brushData:
         print("Failed to load data!")
         return
@@ -47,7 +111,7 @@ def storeTime(time) -> None:
             time_historic += brushTime/brushData[day]['brush_count']
 
     # Write historic values to our data
-    averageBrushData: dict = json.load(open("toothbrush_average.json", "r"))
+    averageBrushData: dict = json.load(open(f"{filepath.path}toothbrush_average.json", "r"))
     if not averageBrushData:
         print("Failed to load average data!")
         return
@@ -56,9 +120,12 @@ def storeTime(time) -> None:
 
     # Write changes back to the data file
     print("Writing changes...", end="")
-    json.dump(brushData, open("toothbrush_daily.json", "w"), indent=4)
-    json.dump(averageBrushData, open("toothbrush_average.json", "w"), indent=4)
+    json.dump(brushData, open(f"{filepath.path}toothbrush_daily.json", "w"), indent=4)
+    json.dump(averageBrushData, open(f"{filepath.path}toothbrush_average.json", "w"), indent=4)
     print("Success!")
+
+    # Recalculate weekly data as well
+    calculateWeeklyData()
 
 
 def showData() -> None:
@@ -66,8 +133,8 @@ def showData() -> None:
     If no data is found, alert the user.
     """
     # Read the data file
-    brushData: dict = json.load(open("toothbrush_daily.json", "r"))
-    averageBrushData: dict = json.load(open("toothbrush_average.json", "r"))
+    brushData: dict = json.load(open(f"{filepath.path}toothbrush_daily.json", "r"))
+    averageBrushData: dict = json.load(open(f"{filepath.path}toothbrush_average.json", "r"))
     if not brushData or not averageBrushData:
         print("Failed to load data!")
         return
