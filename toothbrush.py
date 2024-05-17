@@ -166,11 +166,22 @@ def showData() -> None:
     if (len(list(averageWeekData.items())) == 0):
         print("\nNo weekly data available\n")
     else:
-        avgWeekData = list(averageWeekData.items())[-1]
-        week_avg_brush_time: int = avgWeekData[-1]['average_brush_time']
-        week_days_brushed: int = avgWeekData[-1]['days_brushed']
-        print(f"\nStats for this Week:\n\tDays Brushed: {week_days_brushed}\n\tAverage Brush Time: {week_avg_brush_time}")
+        # Try and display data for current and previous week
+        today_datetime = datetime.strptime(today, '%Y-%m-%d')
+        this_week = (str)((today_datetime - timedelta(days=today_datetime.weekday())).date())
+        last_week = (str)((today_datetime - timedelta(days=today_datetime.weekday()+7)).date())
+        if (this_week in averageWeekData.keys()):
+            thisWeekData: dict = averageWeekData[this_week]
+            print(f"\nStats for This Week:\n\tDays Brushed: {thisWeekData['days_brushed']}\n\tBrushes Per Day: {thisWeekData['average_brush_count']}")
+        else:
+            print(f"\nNo stats for this week (week of {this_week})\n")
+        if (last_week in averageWeekData.keys()):
+            lastWeekData: dict = averageWeekData[last_week]
+            print(f"\nStats for Last Week:\n\tDays Brushed: {lastWeekData['days_brushed']}\n\tBrushes Per Day: {lastWeekData['average_brush_count']}")
+        else:
+            print(f"\nNo stats for last week (week of {last_week})\n")
 
+    # Display all-time averages
     histCnt: int = averageBrushData['historic_brush_count']
     histTime: int = averageBrushData['historic_brush_time_minutes'] 
     histTime_sec = (int)(histTime*60)
@@ -181,21 +192,16 @@ def showData() -> None:
 
 def main():
     """ Handle Command-Line arguments and run appropriate functions """
-    if (len(cliArgs) == 0):
-        print("*** No command specified, run -h for information ***")
+    if (len(cliArgs) == 0 or cliArgs[0] == "-h" or cliArgs[0] == "--help"):
+        print("\nCommand List:\n\t--store [TIME_MINUTES]: store brush time\n\t--show: show daily brushing data\n")
         return
     elif cliArgs[0] == "--store" and len(cliArgs) > 1:
         storeTime((float)(cliArgs[1]))
     elif cliArgs[0] == "--show":
         showData()
-    elif cliArgs[0] == "-h":
-        print("\nCommand List:")
-        print("\t--store [TIME_MINUTES]: store brush time")
-        print("\t--show: show daily brushing data\n")
     else:
-        print("*** Unknown Command, run -h for information ***")
+        print("\n*** Unknown Command, run -h for information ***\n")
         return
-
 
 # Run main when called
 if __name__ == "__main__":

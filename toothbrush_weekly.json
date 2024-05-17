@@ -18,5 +18,10 @@
         "days_brushed": 1,
         "average_brush_count": 2.0,
         "average_brush_time": 5.2
+    },
+    "2024-05-13": {
+        "days_brushed": 1,
+        "average_brush_count": 1.0,
+        "average_brush_time": 10.0
     }
 }
