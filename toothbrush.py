@@ -172,12 +172,12 @@ def showData() -> None:
         last_week = (str)((today_datetime - timedelta(days=today_datetime.weekday()+7)).date())
         if (this_week in averageWeekData.keys()):
             thisWeekData: dict = averageWeekData[this_week]
-            print(f"\nStats for This Week:\n\tDays Brushed: {thisWeekData['days_brushed']}\n\tBrushes Per Day: {thisWeekData['average_brush_count']}")
+            print(f"\nStats for This Week (week of {this_week}):\n\tDays Brushed: {thisWeekData['days_brushed']}\n\tBrushes Per Day: {thisWeekData['average_brush_count']}")
         else:
             print(f"\nNo stats for this week (week of {this_week})\n")
         if (last_week in averageWeekData.keys()):
             lastWeekData: dict = averageWeekData[last_week]
-            print(f"\nStats for Last Week:\n\tDays Brushed: {lastWeekData['days_brushed']}\n\tBrushes Per Day: {lastWeekData['average_brush_count']}")
+            print(f"\nStats for Last Week (week of {last_week}):\n\tDays Brushed: {lastWeekData['days_brushed']}\n\tBrushes Per Day: {lastWeekData['average_brush_count']}")
         else:
             print(f"\nNo stats for last week (week of {last_week})\n")
 
