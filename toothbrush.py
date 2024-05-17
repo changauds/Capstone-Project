@@ -135,7 +135,14 @@ def showData() -> None:
     # Read the data file
     brushData: dict = json.load(open(f"{filepath.path}toothbrush_daily.json", "r"))
     averageBrushData: dict = json.load(open(f"{filepath.path}toothbrush_average.json", "r"))
-    if not brushData or not averageBrushData:
+    averageWeekData: dict = json.load(open(f"{filepath.path}toothbrush_weekly.json", "r"))
+
+    #grab last updated entry and display average brushing time for last week
+    avgWeekData = list(averageWeekData.items())[-1]
+    avg_brush_time: int = avgWeekData[-1]['average_brush_time']
+
+    print("Most Recent Week's Average Brushing Time: ", avg_brush_time)
+    if not brushData or not averageBrushData or not averageWeekData:
         print("Failed to load data!")
         return
     # Check for existing daily data
