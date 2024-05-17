@@ -137,11 +137,6 @@ def showData() -> None:
     averageBrushData: dict = json.load(open(f"{filepath.path}toothbrush_average.json", "r"))
     averageWeekData: dict = json.load(open(f"{filepath.path}toothbrush_weekly.json", "r"))
 
-    #grab last updated entry and display average brushing time for last week
-    avgWeekData = list(averageWeekData.items())[-1]
-    avg_brush_time: int = avgWeekData[-1]['average_brush_time']
-
-    print("Most Recent Week's Average Brushing Time: ", avg_brush_time)
     if not brushData or not averageBrushData or not averageWeekData:
         print("Failed to load data!")
         return
@@ -156,23 +151,32 @@ def showData() -> None:
         timeSum_min, timeSum_sec = divmod(timeSum_sec, 60)
         timeSum_format = '{:02d}:{:02d}'.format(timeSum_min, timeSum_sec)
 
-        histCnt: int = averageBrushData['historic_brush_count']
-        histTime: int = averageBrushData['historic_brush_time_minutes']
-        
-        histTime_sec = (int)(histTime*60)
-        histTime_min, histTime_sec = divmod(histTime_sec, 60)
-        histTime_format = '{:02d}:{:02d}'.format(histTime_min, histTime_sec)
-        print(f"\nBrushing Stats for {today}\n")
-        print(f"You brushed {count} time(s) today, for a total of {timeSum_format} minutes!")
+        print(f"\nStats for {today}:\n")
+        print(f"You brushed {count} time(s) for a total of {timeSum_format}")
         print("\nHere's your daily breakdown:")
         for i in range(len(brushData[today]['brush_time_minutes'])): 
             timeSum_sec = (int)(brushData[today]['brush_time_minutes'][i] * 60)
             timeSum_min, timeSum_sec = divmod(timeSum_sec, 60)
             timeSum_format = '{:02d}:{:02d}'.format(timeSum_min, timeSum_sec)
             print(f"\tBrush {i+1} -> {timeSum_format}")
-        print(f"\nOn average, you brush {histCnt} times a day for {histTime_format} minutes per brush\n")
     else:
         print(f"\nNo brush data for {today}\n")
+
+    # Grab data from most recent week
+    if (len(list(averageWeekData.items())) == 0):
+        print("\nNo weekly data available\n")
+    else:
+        avgWeekData = list(averageWeekData.items())[-1]
+        week_avg_brush_time: int = avgWeekData[-1]['average_brush_time']
+        week_days_brushed: int = avgWeekData[-1]['days_brushed']
+        print(f"\nStats for this Week:\n\tDays Brushed: {week_days_brushed}\n\tAverage Brush Time: {week_avg_brush_time}")
+
+    histCnt: int = averageBrushData['historic_brush_count']
+    histTime: int = averageBrushData['historic_brush_time_minutes'] 
+    histTime_sec = (int)(histTime*60)
+    histTime_min, histTime_sec = divmod(histTime_sec, 60)
+    histTime_format = '{:02d}:{:02d}'.format(histTime_min, histTime_sec)
+    print(f"\nHistoric Summary:\n\tOn average, you brush {round(histCnt, 3)} times a day for {histTime_format} minutes per brush\n")
 
 
 def main():
