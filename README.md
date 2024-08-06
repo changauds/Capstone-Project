@@ -1,4 +1,4 @@
-# Group6Mirror
+# Smart Mirror
 
 
 ### NOTE
